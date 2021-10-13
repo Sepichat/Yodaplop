@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
-// import BouncyCheckbox from "react-native-bouncy-checkbox";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export default function App() {
   const items = [
@@ -12,13 +12,13 @@ export default function App() {
     {
       id: '2',
       name: 'Second Item',
-      isDone: 'done'
+      isDone: true
     }
   ];
   const [theArray, setTheArray] = React.useState(items);
   const addItem = (name) => {
-    onChangeText('')
-    setTheArray(oldArray => [...oldArray, {id: oldArray.length + 1, name}]);
+    onChangeText('');
+    setTheArray(oldArray => [...oldArray, {id: `${oldArray.length + 1}`, name}]);
   };
   
 
@@ -62,18 +62,19 @@ const Separator = () => {
   )
 }
 
-const Item = ({name, isDone}) => {
+const Item = (item) => {
+  const [newItem, setNewItem] = React.useState(item);
+  let bouncyCheckboxRef = null;
   return (
     <View style={styles.item}>
-      {/* <BouncyCheckbox
+      <BouncyCheckbox
         style={{ marginTop: 16 }}
-        ref={(ref: any) => (bouncyCheckboxRef = ref)}
-        isChecked={checkboxState}
-        text="Synthetic Checkbox"
+        ref={(ref) => (bouncyCheckboxRef = ref)}
+        isChecked={newItem.isDone}
+        text={newItem.name}
         disableBuiltInState
-        onPress={() => setCheckboxState(!checkboxState)}
-      /> */}
-      <Text>{name}</Text>
+        onPress={() => setNewItem({...newItem, isDone: !newItem.isDone})}
+      />
     </View>
   );
 }
