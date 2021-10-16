@@ -29,16 +29,16 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Add Items to your todo list</Text>
+      <Separator />
       <View>
-        <Text>Add Items to your todo list</Text>
-        <StatusBar style="auto" />
         <TextInput 
           style={styles.input}
           value={text}
           onChangeText={onChangeText}
         />
       </View>
-      <View>
+      <View style={styles.buttonAdd}>
         <Button 
           title="add Item"
           onPress={() => {addItem(text)}}
@@ -49,9 +49,16 @@ export default function App() {
       <Separator />
       <FlatList
         data={theArray}
+        // data={theArray.filter(item => !item.isDone)}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-      /> 
+      />
+      {/* <StatusBar style="auto" />
+      <FlatList
+        data={theArray.filter(item => item.isDone)}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      /> */}
     </SafeAreaView>
   );
 }
@@ -68,11 +75,13 @@ const Item = (item) => {
   return (
     <View style={styles.item}>
       <BouncyCheckbox
-        style={{ marginTop: 16 }}
+        style={{ marginTop: 0 }}
         ref={(ref) => (bouncyCheckboxRef = ref)}
         isChecked={newItem.isDone}
         text={newItem.name}
         disableBuiltInState
+        iconStyle={item.isDone ? { borderColor: "red" } : { borderColor: "green" }}
+        fillColor={item.isDone ? 'red' : 'green' }
         onPress={() => setNewItem({...newItem, isDone: !newItem.isDone})}
       />
     </View>
@@ -80,8 +89,12 @@ const Item = (item) => {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    fontWeight: '700'
+  },
   container: {
-    paddingTop: StatusBar.currentHeight || 50,
+    paddingTop: StatusBar.currentHeight || 70,
     flex: 1,
     backgroundColor: '#aaa',
     alignItems: 'center',
@@ -97,8 +110,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginVertical: 8,
     marginHorizontal: 16,
+    marginVertical: 4
   },
   separator: {
     marginVertical: 10
@@ -106,5 +119,8 @@ const styles = StyleSheet.create({
   done: {
     textDecorationLine: 'line-through',
     color: 'red'
+  },
+  buttonAdd: {
+    marginTop: 20
   }
 });
