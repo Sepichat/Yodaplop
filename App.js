@@ -2,29 +2,35 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { saveChallenge, getChallenges, updateChallenge, resetChallenges } from './Store';
+import { v4 as uuid } from 'uuid';
 
 export default function App() {
-  const items = [
-    {
-      id: '1',
-      name: 'First Item',
-    },
-    {
-      id: '2',
-      name: 'Second Item',
-      isDone: true
-    }
-  ];
-  const [theArray, setTheArray] = React.useState(items);
+  const [challengeList, setChallengeList] = React.useState([]);
+  //resetChallenges();
+  React.useEffect(() => {
+    getChallenges()
+      .then(challengeList => {
+        setChallengeList(challengeList);
+      })
+      .catch(errors => console.log("error retrieving challenges during app bootstrap:", errors));
+  }, []);
+
   const addItem = (name) => {
     onChangeText('');
-    setTheArray(oldArray => [...oldArray, {id: `${oldArray.length + 1}`, name}]);
+    const newChallenge = {
+      id: uuid(),
+      name,
+      isDone: false
+    };
+    saveChallenge(newChallenge);
+    setChallengeList(oldArray => [...oldArray, newChallenge]);
   };
   
 
   const [text, onChangeText] = React.useState("Some Item");
   const renderItem = ({ item }) => (
-    <Item name={item.name} isDone={item.isDone} />
+    <Item item={item} />
   );
 
   return (
@@ -48,7 +54,7 @@ export default function App() {
       </View>
       <Separator />
       <FlatList
-        data={theArray}
+        data={challengeList}
         // data={theArray.filter(item => !item.isDone)}
         renderItem={renderItem}
         keyExtractor={item => item.id}
@@ -69,7 +75,7 @@ const Separator = () => {
   )
 }
 
-const Item = (item) => {
+const Item = ({item}) => {
   const [newItem, setNewItem] = React.useState(item);
   let bouncyCheckboxRef = null;
   return (
@@ -82,7 +88,11 @@ const Item = (item) => {
         disableBuiltInState
         iconStyle={item.isDone ? { borderColor: "red" } : { borderColor: "green" }}
         fillColor={item.isDone ? 'red' : 'green' }
-        onPress={() => setNewItem({...newItem, isDone: !newItem.isDone})}
+        onPress={() => {
+          const updatedItem = {...newItem, isDone: !newItem.isDone};
+          updateChallenge(updatedItem);
+          setNewItem(updatedItem)
+        }}
       />
     </View>
   );
