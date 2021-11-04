@@ -1,9 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, FlatList, SafeAreaView, Text, TextInput, View, Modal, Pressable } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { saveChallenge, getChallenges, updateChallenge, resetChallenges } from './Store';
 import { v4 as uuid } from 'uuid';
+
+import { saveChallenge, getChallenges, updateChallenge, resetChallenges } from './Store';
+import { styles } from './styles';
 
 export default function App() {
   const [challengeList, setChallengeList] = React.useState([]);
@@ -77,10 +78,13 @@ const Separator = () => {
 
 const Item = ({item}) => {
   const [newItem, setNewItem] = React.useState(item);
+  const [modalVisible, setModalVisible] = React.useState(false);
   let bouncyCheckboxRef = null;
   const { done } = styles;
+ 
   return (
     <View style={styles.item}>
+      <MenuModal item={item} modalVisible={modalVisible} setModalVisible={setModalVisible}></MenuModal>
       <BouncyCheckbox
         style={{ marginTop: 0 }}
         ref={(ref) => (bouncyCheckboxRef = ref)}
@@ -94,50 +98,36 @@ const Item = ({item}) => {
           updateChallenge(updatedItem);
           setNewItem(updatedItem)
         }}
+        onLongPress ={() => {
+          setModalVisible(true)
+        }}
+        delayLongPress={100}
       />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: '700'
-  },
-  container: {
-    paddingTop: StatusBar.currentHeight || 70,
-    flex: 1,
-    backgroundColor: '#aaa',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    height: 40,
-    width: 200,
-    borderColor: 'black',
-    borderWidth: 1,
-    color: 'red'
-  },
-  item: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    marginHorizontal: 16,
-    marginVertical: 4
-  },
-  done: {
-    borderColor: "red"
-  },
-  pending: {
-    borderColor: "green"
-  },
-  separator: {
-    marginVertical: 10
-  },
-  done: {
-    textDecorationLine: 'line-through',
-    color: 'red'
-  },
-  buttonAdd: {
-    marginTop: 20
-  }
-});
+const MenuModal = ({item, modalVisible, setModalVisible}) => {
+  return (
+    <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Menu for {item.name}</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+  );
+}
