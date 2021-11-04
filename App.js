@@ -78,6 +78,7 @@ const Separator = () => {
 const Item = ({item}) => {
   const [newItem, setNewItem] = React.useState(item);
   let bouncyCheckboxRef = null;
+  const { done } = styles;
   return (
     <View style={styles.item}>
       <BouncyCheckbox
@@ -86,8 +87,8 @@ const Item = ({item}) => {
         isChecked={newItem.isDone}
         text={newItem.name}
         disableBuiltInState
-        iconStyle={item.isDone ? { borderColor: "red" } : { borderColor: "green" }}
-        fillColor={item.isDone ? 'red' : 'green' }
+        iconStyle={ done }
+        fillColor={ 'green' }
         onPress={() => {
           const updatedItem = {...newItem, isDone: !newItem.isDone};
           updateChallenge(updatedItem);
@@ -122,6 +123,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 16,
     marginVertical: 4
+  },
+  done: {
+    borderColor: "red"
+  },
+  pending: {
+    borderColor: "green"
   },
   separator: {
     marginVertical: 10
