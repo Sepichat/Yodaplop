@@ -53,16 +53,26 @@ export const styles = StyleSheet.create({
       margin: 20,
       backgroundColor: "white",
       borderRadius: 20,
-      padding: 35,
-      alignItems: "center",
+      padding: 5,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 2
       },
+      flexDirection: "column",
       shadowOpacity: 0.25,
       shadowRadius: 4,
       elevation: 5
+    },
+    closeModal: {
+        padding: 5,
+        alignItems: "flex-end",
+        // position: "absolute",
+        // top: 5,
+        // right: 5
+    },
+    descriptionModal :{
+        padding: 5
     },
     button: {
       borderRadius: 20,
@@ -74,6 +84,7 @@ export const styles = StyleSheet.create({
     },
     buttonClose: {
       backgroundColor: "#2196F3",
+      width: "30%"
     },
     textStyle: {
       color: "white",

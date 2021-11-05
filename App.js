@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, FlatList, SafeAreaView, Text, TextInput, View, Modal, Pressable } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import 'react-native-get-random-values'
 import { v4 as uuid } from 'uuid';
 
 import { saveChallenge, getChallenges, updateChallenge, resetChallenges } from './Store';
@@ -99,9 +100,9 @@ const Item = ({item}) => {
           setNewItem(updatedItem)
         }}
         onLongPress ={() => {
-          setModalVisible(true)
+          setModalVisible(true);
         }}
-        delayLongPress={100}
+        delayLongPress={500}
       />
     </View>
   );
@@ -117,17 +118,29 @@ const MenuModal = ({item, modalVisible, setModalVisible}) => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Menu for {item.name}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.closeModal}>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>X</Text>
+                </Pressable>
+              </View>
+              <View style={styles.descriptionModal}>
+                <Text style={styles.modalText}>Menu for {item.name}</Text>
+              </View>
+              {/* <View style={styles.actionModal}>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Delete item</Text>
+                </Pressable>
+              </View> */}
+            </View>
           </View>
-        </View>
       </Modal>
   );
 }
